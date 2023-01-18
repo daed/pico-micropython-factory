@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  esp-idf:
+    build:
+      context: ..
+      dockerfile: Docker/dockerfile
+    volumes: 
+      - "$PWD/project:/project"
+    environment:
+      - UID=${DO_UID}
+      - GID=${DO_GID}

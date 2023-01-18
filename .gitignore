@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# user code
+
+/modules
+/scripts
+
+# docker container output directory
+
+/projects/**
