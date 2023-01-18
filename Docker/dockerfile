@@ -13,7 +13,8 @@ RUN make submodules
 
 FROM micropythonport as firmwarebuild
 COPY Docker/scripts /scripts
-
+COPY modules/* /micropython/ports/esp32/modules/
+COPY scripts/* /micropython/ports/esp32/scripts/
 WORKDIR /
 
 CMD ["/scripts/build_firmware.sh"]
