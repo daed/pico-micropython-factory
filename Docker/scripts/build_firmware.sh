@@ -1,6 +1,9 @@
 # some knobs
 DEBUG=0
 
+export DIRBOARD="rp2"
+export BUILDN="PICO_W"
+export BOARD_DIR=boards/$BUILDN/
 export CURDATE=`date +%Y%m%d`
 export WORKING=/project/working
 
@@ -14,27 +17,25 @@ echo ----------------------------------
 echo ----------------------------------
 echo     BUILD STARTED!
 . $IDF_PATH/export.sh
-cd /micropython/ports/esp32
+cd /micropython/ports/$DIRBOARD
 make
-chown -R ${UID}:${GID} build-GENERIC
+chown -R ${UID}:${GID} build-$BUILDN
 echo ----------------------------------
 echo ----------------------------------
 echo     BUILD FINISHED!
 echo ----------------------------------
 
 mkdir -p $WORKING
-cp build-GENERIC/micropython.* $WORKING
-cp build-GENERIC/partition_table/partition-table.bin $WORKING
-cp build-GENERIC/bootloader/bootloader.bin $WORKING
+cp build-$BUILDN/firmware.* $WORKING
 
 cd /project
-rm -rf micropython-esp32-$CURDATE.tar.gz
+rm -rf micropython-$DIRBOARD-$CURDATE.tar.gz
 
 cd $WORKING
-tar cvf /project/micropython-esp32-$CURDATE.tar *
+tar cvf /project/micropython-$DIRBOARD-$CURDATE.tar *
 
 cd /project
-gzip micropython-esp32-$CURDATE.tar 
+gzip micropython-$DIRBOARD-$CURDATE.tar 
 chown -R user:user /project 
 
 echo ----------------------------------

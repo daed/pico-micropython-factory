@@ -1,20 +1,23 @@
 FROM espressif/idf:v4.2 AS base
 MAINTAINER Brad Arnett
 
-FROM base as micropython
+FROM base as packages
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y git cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential && rm -rf /var/lib/apt/lists/*
+
+FROM packages as micropython
 WORKDIR /
-RUN git clone https://github.com/micropython/micropython.git -b v1.19.1 --recurse
-WORKDIR /micropython/mpy-cross
-RUN make
+RUN git clone https://github.com/micropython/micropython.git -b master --recurse
+WORKDIR /micropython
 
 FROM micropython as micropythonport
-WORKDIR /micropython/ports/esp32
+WORKDIR /micropython/ports/rp2
 RUN make submodules
 
 FROM micropythonport as firmwarebuild
 COPY Docker/scripts /scripts
-COPY modules/* /micropython/ports/esp32/modules/
-COPY scripts/* /micropython/ports/esp32/scripts/
+COPY modules/* /micropython/ports/rp2/modules/
+COPY scripts/* /micropython/ports/rp2/scripts/
 WORKDIR /
 
 CMD ["/scripts/build_firmware.sh"]
