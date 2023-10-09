@@ -1,5 +1,5 @@
 # some knobs
-DEBUG=0
+DEBUG=1
 
 export DIRBOARD="rp2"
 export BUILDN="PICO_W"
@@ -18,6 +18,8 @@ echo ----------------------------------
 echo     BUILD STARTED!
 . $IDF_PATH/export.sh
 cd /micropython/ports/$DIRBOARD
+make submodules
+make clean
 make
 chown -R ${UID}:${GID} build-$BUILDN
 echo ----------------------------------
